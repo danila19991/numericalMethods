@@ -15,23 +15,59 @@ QRMatrix::QRMatrix(Matrix m):_r(std::move(m))
 		}
 		u[0] -= sqrt(u^u);
 
-		Matrix tmp = Matrix::onnes(_r.numRows());
+		Matrix loc = (u * u) / (-1*(u^u) / 2);
 
-		Matrix loc = (u * u) / ((u^u) / 2);
-
-		for (size_t j = 1;j <= loc.numRows();++j)
+		for(size_t j =0 ; j<u.size();++j)
 		{
-			for (size_t t = 1;t <= loc.numCols();++t)
+			loc[j][j] += 1;
+		}
+
+		Matrix tmp(u.size());
+
+		for(size_t k=0;k<loc.numCols();++k)
+		{
+			for (size_t t = 0;t < loc.numCols();++t)
 			{
-				tmp[tmp.numRows() - j][tmp.numCols() - t] -=
-					loc[loc.numRows() - j][loc.numCols() - t];
+				for (size_t j = 0;j < loc.numRows();++j)
+				{
+					tmp[t][j] += loc[k][j] * _r[k + i][t + i];
+				}
 			}
 		}
 
-		_r = tmp * _r;
-		_q = _q * tmp;
-		//todo:
-		//optimise multiplying on matrix with many zeroes.
+		tmp = tmp.trans();
+
+		for(size_t j=0;j<tmp.numRows();++j)
+		{
+			for(size_t t=0;t<tmp.numCols();++t)
+			{
+				_r[j + i][t + i] = tmp[j][t];
+			}
+		}
+
+		tmp = Matrix(_q.numRows(), u.size());
+
+		for (size_t j = 0;j < _r.numRows();++j)
+		{
+			for (size_t t = 0;t < loc.numCols();++t)
+			{
+				for (size_t k = 0;k<_r.numCols();++k)
+				{
+					if (k >= i)
+					{
+						tmp[j][t] += _q[j][k] * loc[t][k - i];
+					}
+				}
+			}
+		}
+
+		for (size_t j = 0;j<tmp.numRows();++j)
+		{
+			for (size_t t = 0;t<tmp.numCols();++t)
+			{
+				_q[j][t+i] = tmp[j][t];
+			}
+		}
 	}
 }
 

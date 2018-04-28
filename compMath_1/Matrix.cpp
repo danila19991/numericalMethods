@@ -223,11 +223,11 @@ Matrix operator/(const Matrix& vec, double k)
 {
 	Matrix ans = vec;
 
-	for (size_t i=0; i<ans.numRows();++i)
+	for(auto& row : ans._data)
 	{
-		for(size_t j=0;j<ans.numCols();++j)
+		for(auto& elem : row)
 		{
-			ans[i][j] /= k;
+			elem /= k;
 		}
 	}
 

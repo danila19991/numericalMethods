@@ -43,6 +43,37 @@ public:
 	Matrix(std::vector<std::vector<double>> data);
 
 	/**
+	 * \brief			Copy constructor.
+	 * \param[in] other Other matrix object.
+	 */
+	Matrix(const Matrix& other) = default;
+	
+	/**
+	 * \brief			Copy assignment operator.
+	 * \param[in] other Other matrix object.
+	 * \return			Copyed structure.
+	 */
+	Matrix& operator = (const Matrix& other) = default;
+
+	/**
+	 * \brief			Move constructor.
+	 * \param[in] other Other matrix object.
+	 */
+	Matrix(Matrix&& other) = default;
+
+	/**
+	 * \brief			Move assignment operator.
+	 * \param[in] other Other matrix object.
+	 * \return			Moved structure.
+	 */
+	Matrix& operator = (Matrix&& other) = default;
+
+	/**
+	 * \brief Virtual destructor.
+	 */
+	virtual ~Matrix() = default;
+
+	/**
 	 * \brief			Operator for accesing row.
 	 * \param[in] pos	Number of row.
 	 * \return			Row of matrix.

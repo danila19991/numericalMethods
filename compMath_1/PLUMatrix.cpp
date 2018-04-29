@@ -10,20 +10,25 @@ PLUMatrix::PLUMatrix(Matrix a):_a(std::move(a))
 
 	const size_t tmpLen = std::min(_a.numCols(), _a.numRows());
 
-	_p.reserve(tmpLen);
 	_q.reserve(tmpLen);
+	_p.reserve(_a.numCols());
 
-	for(size_t i = 0; i < tmpLen;++i)
+	for(size_t i=0;i<_a.numCols();++i)
+	{
+		_p.emplace_back(i);
+	}
+
+	for(size_t i = 0; i+1 < tmpLen;++i)
 	{
 		size_t posx = i, posy = i;
-		double mx = abs(_a[i][i]);
+		double mx = abs(_a[i][_p[i]]);
 		for(size_t j = i; j < _a.numRows();++j)
 		{
 			for(size_t k = i; k < _a.numCols(); ++k)
 			{
-				if(mx < abs(_a[j][k]))
+				if(mx < abs(_a[j][_p[k]]))
 				{
-					mx = abs(_a[j][k]);
+					mx = abs(_a[j][_p[k]]);
 					posx = k;
 					posy = j;
 				}
@@ -33,20 +38,20 @@ PLUMatrix::PLUMatrix(Matrix a):_a(std::move(a))
 		if (abs(mx) < 1e-9)
 			break;
 
-		_a.swapCols(i, posx);
+		std::swap(_p[i], _p[posx]);
+
 		_a.swapRows(i, posy);
 
-		_p.emplace_back(posx);
 		_q.emplace_back(posy);
 
 		for(size_t j = i + 1; j < _a.numRows();++j)
 		{
-			const double k = _a[j][i] / _a[i][i];
+			const double k = _a[j][_p[i]] / _a[i][_p[i]];
 			for(size_t t = i; t < _a.numCols();++t)
 			{
-				_a[j][t] -= k * _a[i][t];
+				_a[j][_p[t]] -= k * _a[i][_p[t]];
 			}
-			_a[j][i] = k;
+			_a[j][_p[i]] = k;
 		}
 	}
 }
@@ -62,19 +67,15 @@ Matrix PLUMatrix::getA() const noexcept
 			for(int t=0;t<static_cast<int>(a.numCols()) && t<=i && t<=j;++t)
 			{
 				if (i == t)
-					a[i][j] += tmp[j][t];
+					a[i][_p[j]] += tmp[_p[j]][t];
 				else
-					a[i][j] += _a[i][t] * tmp[j][t];
+					a[i][_p[j]] += _a[i][_p[t]] * tmp[_p[j]][t];
 			}
 		}
 	}
 
-	if (!_p.empty()) {
-		for (int i = static_cast<int>(_p.size()) - 1;i >= 0;--i)
-		{
-			a.swapCols(i, _p[i]);
-		}
-		for (int i = static_cast<int>(_p.size()) - 1;i >= 0;--i)
+	if (!_q.empty()) {
+		for (int i = static_cast<int>(_q.size()) - 1;i >= 0;--i)
 		{
 			a.swapRows(i, _q[i]);
 		}
@@ -89,7 +90,7 @@ double PLUMatrix::getDeterminant() const noexcept
 	double ans = 1;
 	for(size_t i=0;i<_a.numCols(); ++i)
 	{
-		ans *= _a[i][i];
+		ans *= _a[i][_p[i]];
 	}
 	return ans;
 }
@@ -97,7 +98,7 @@ double PLUMatrix::getDeterminant() const noexcept
 size_t PLUMatrix::getRank() const noexcept
 {
 	size_t ans = 0;
-	while (ans < _a.numCols() && ans < _a.numRows() && abs(_a[ans][ans]) > eps)
+	while (ans < _a.numCols() && ans < _a.numRows() && abs(_a[ans][_p[ans]]) > eps)
 		++ans;
 	return ans;
 }
@@ -137,7 +138,7 @@ bool PLUMatrix::hasSolution(MyVector b) const noexcept
 		double res=0;
 		for(size_t j = 0;j<num;++j)
 		{
-			res += _a[i][j] * b[j];
+			res += _a[i][_p[j]] * b[j];
 		}
 		if (abs(res - b[i]) > eps)
 			return false;
@@ -165,24 +166,19 @@ MyVector PLUMatrix::solve(MyVector b) const noexcept
 		double tmp = b[i];
 		for (size_t j = 0;j<i;++j)
 		{
-			tmp -= ans[j] * _a[i][j];
+			tmp -= ans[_p[j]] * _a[i][_p[j]];
 		}
-		ans[i] = tmp;
+		ans[_p[i]] = tmp;
 	}
 
 	for (int i = static_cast<int>(num) - 1; i >= 0;--i)
 	{
-		double tmp = ans[i];
+		double tmp = ans[_p[i]];
 		for (int j = static_cast<int>(num) - 1;j>i;--j)
 		{
-			tmp -= ans[j] * _a[i][j];
+			tmp -= ans[_p[j]] * _a[i][_p[j]];
 		}
-		ans[i] = tmp / _a[i][i];
-	}
-
-	if (!_p.empty()) {
-		for (int i = static_cast<int>(_p.size()) - 1;i >= 0;--i)
-			std::swap(ans[i], ans[_p[i]]);
+		ans[_p[i]] = tmp / _a[i][_p[i]];
 	}
 
 	return ans;

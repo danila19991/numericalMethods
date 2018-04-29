@@ -60,7 +60,7 @@ void outputInTableWithHeader(const std::vector<std::string>& header,
 		assert(it.size() == header.size());
 	}
 
-	std::vector<unsigned int> lens = getLens(data,pres);
+	std::vector<size_t> lens = getLens(data,pres);
 
 	for(size_t i=0;i<header.size();++i)
 	{
@@ -85,7 +85,7 @@ void outputTable(const std::vector<std::vector<double>>& data, const size_t pres
 {
 	assert(!data.empty());
 
-	std::vector<unsigned int> lens = getLens(data, pres);
+	std::vector<size_t> lens = getLens(data, pres);
 
 	out.precision(pres);
 	out << std::fixed;

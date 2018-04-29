@@ -24,8 +24,6 @@ void first(const std::string& fileName)
 
 	std::cout << '\n' << p << '\n';
 
-	std::cout << vec << '\n' << '\n';
-
 	std::cout << p.hasSolution(vec) << '\n' << '\n';
 
 	if (p.hasSolution(vec))
@@ -34,13 +32,12 @@ void first(const std::string& fileName)
 
 		std::cout << ans << '\n' << '\n';
 
-		std::cout << l * ans << '\n';
+		std::cout << vec - l * ans << '\n';
 	}
 	else
 	{
 		std::cout << "There is no solution.\n\n";
 	}
-
 }
 
 void second(const std::string& fileName)
@@ -122,9 +119,9 @@ int main()
 	std::cout.precision(5);
 	std::cout << std::fixed;
 
-	//first("input.txt");
+	first("input.txt");
 	
-	second("input.txt");
+	//second("input.txt");
 
 	//thirdda(8,-1000,1000);
 

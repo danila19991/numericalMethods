@@ -70,7 +70,8 @@ MyVector MyVector::getRand(const size_t dim,const double minElem,const double ma
 	assert(abs(minElem) < 100'000.);
 
 	MyVector ans(dim);
-	std::mt19937 gener(std::chrono::system_clock::now().time_since_epoch().count());
+	std::mt19937 gener(static_cast<size_t>(
+					   std::chrono::system_clock::now().time_since_epoch().count()));
 
 	for(auto& elem:ans._data)
 	{

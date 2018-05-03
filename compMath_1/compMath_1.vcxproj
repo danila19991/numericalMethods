@@ -115,6 +115,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BFS.cpp" />
     <ClCompile Include="Calculations.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
@@ -126,6 +127,7 @@
     <ClCompile Include="IterationES.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BFS.h" />
     <ClInclude Include="Calculations.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MyTable.h" />

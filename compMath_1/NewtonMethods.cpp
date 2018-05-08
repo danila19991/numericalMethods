@@ -5,72 +5,14 @@
 #include <tuple>
 #include <chrono>
 
-constexpr int operForJakobi = 2267;
+constexpr int operForJakobi = 1167;
 constexpr int operForNextVale = 220;
-constexpr int calcForJakobi = 2167;
+constexpr int calcForJakobi = 1067;
 constexpr int calcForNextVale = 210;
 
-double Newton1(double(* func)(double x), double(* driv)(double x), double l, double r, double eps)
+double Newton(double(* func)(double x), double(* driv)(double x), double l, double r, double eps)
 {
-	assert(func(l)*func(r) <= 0);
-
-	if (l > r)
-		std::swap(l, r);
-
-	int steps1 = 0, steps2 = 0;
-
-	while((r-l) > 0.1)
-	{
-		const double mid = (r + l) / 2;
-		if (func(l)*func(mid) > 0)
-			l = mid;
-		else
-			r = mid;
-
-		++steps1;
-	}
-
-	double prev = (r + l) / 2;
-	double nxt = prev - func(prev) / driv(prev);
-
-	while(abs(prev - nxt) >= eps)
-	{
-		prev = nxt;
-		nxt = prev - func(prev) / driv(prev);
-
-		++steps2;
-		if(steps2 > 100000)
-		{
-			std::cout << "Newton1 is not working";
-			return std::numeric_limits<double>::infinity();
-		}
-	}
-
-	std::cout << "Newton1 work in " << steps1 << " and " << steps2 << '\n';
-
-	return nxt;
-}
-
-double AbsoluteLessRoot1(double(* func)(double x), double(* driv)(double x), double eps)
-{
-	double r=1., l=-1.;
-
-	for (int i = 1; func(eps)*func(i) > 0. && i < 1e6; ++i)
-		r = i;
-
-	const double ansr = Newton1(func, driv, eps, r, eps);
-
-	for (int i = -1; func(eps)*func(i) > 0. && i > -1e6; --i)
-		l = i;
-
-	const double ansl = Newton1(func, driv, l, -eps, eps);
-
-	return (abs(ansl) < abs(ansr)) ? ansl : ansr;
-}
-
-double Newton2(double(* func)(double x), double(* driv)(double x), double l, double r, double eps)
-{
-	assert(func(l)*func(r) <= 0);
+	assert(func(l)*func(r) <= 0.);
 	
 	if (l > r)
 		std::swap(l, r);
@@ -105,19 +47,29 @@ double Newton2(double(* func)(double x), double(* driv)(double x), double l, dou
 	return nxt;
 }
 
-double AbsoluteLessRoot2(double(* func)(double x), double(* driv)(double x), double eps)
+double AbsoluteLessRoot(double(*func)(double x), double(*driv)(double x), double eps)
 {
 	double r = 1., l = -1.;
 
-	for (int i = 1; func(eps)*func(i) > 0. && i < 1e6; ++i)
+	int i = 1;
+
+	while (func(eps)*func(i) > 0. && i < 1'000'000)
+	{
+		++i;
 		r = i;
+	}
 
-	const double ansr = Newton2(func, driv, eps, r, eps);
+	const double ansr = Newton(func, driv, eps, r, eps);
 
-	for (int i = -1; func(eps)*func(i) > 0. && i > -1e6; --i)
+	i = -1;
+
+	while (func(eps)*func(i) > 0. && i > -1'000'000)
+	{
+		--i;
 		l = i;
+	}
 
-	const double ansl = Newton2(func, driv, l, -eps, eps);
+	const double ansl = Newton(func, driv, l, -eps, eps);
 
 	return (abs(ansl) < abs(ansr)) ? ansl : ansr;
 }
@@ -130,14 +82,14 @@ std::tuple<MyVector, int, int, int> NewtonES1(MyVector(* func)(const MyVector& x
 	const std::chrono::time_point<std::chrono::steady_clock> start =
 		std::chrono::steady_clock::now();
 
-	MyVector nxt = fx - PLUMatrix(driv(fx)).obrat()*func(fx);
+	MyVector nxt = fx - PLUMatrix(driv(fx)).solve(func(fx));
 
-	while((fx-nxt).getNorm() > eps)
+	while((fx-nxt).getNorm() + func(nxt).getNorm() > eps)
 	{
 		++steps;
-		
+
 		fx = nxt;
-		nxt = fx -PLUMatrix(driv(fx)).obrat()*func(fx);
+		nxt = fx - PLUMatrix(driv(fx)).solve(func(fx));
 	}
 
 	const int militime = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -161,20 +113,20 @@ std::tuple<MyVector, int, int, int> NewtonES2(MyVector(* func)(const MyVector& x
 	const std::chrono::time_point<std::chrono::steady_clock> start =
 		std::chrono::steady_clock::now();
 
-	//O(n^2 + (2/3*n^3 + n*(n+n^2)) + 4*n^2)=O(6n^2 + 5/3n^3)~operations(2267)
-	//O(5n^2 + 5/3n^3)~calculations(2167)
-	const Matrix m = PLUMatrix(driv(fx)).obrat();
+	//O(n^2 + (2/3*n^3 + 4*n^2)~operations(1167)
+	//O(4n^2 + 2/3n^3)~calculations(1067)
+	const PLUMatrix m = PLUMatrix(driv(fx));
 
 	//O(n + n + n^2 + 10*n)=O(12n + n^2)~operations(220)
 	//O(11n + n^2)~calculations(210)
-	MyVector nxt = fx - m*func(fx);
+	MyVector nxt = fx - m.solve(func(fx));
 
-	while ((fx - nxt).getNorm() > eps)//O(2n)
+	while ((fx - nxt).getNorm() + func(nxt).getNorm() > eps)//O(2n)
 	{
 		++steps;
 
 		fx = nxt;//O(n)
-		nxt = fx - m*func(fx);
+		nxt = fx - m.solve(func(fx));
 	}
 
 	const int militime = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -198,20 +150,20 @@ std::tuple<MyVector, int, int, int> NewtonES3(MyVector(*func)(const MyVector& x)
 	const std::chrono::time_point<std::chrono::steady_clock> start =
 		std::chrono::steady_clock::now();
 
-	Matrix m = PLUMatrix(driv(fx)).obrat();
+	PLUMatrix m = PLUMatrix(driv(fx));
 
-	MyVector nxt = fx - m * func(fx);
+	MyVector nxt = fx - m.solve(func(fx));
 
-	while ((fx - nxt).getNorm() > eps)
+	while ((fx - nxt).getNorm() + func(nxt).getNorm() > eps)
 	{
 		fx = nxt;
 		
 		++steps;
 		
 		if (steps <= k)
-			m = PLUMatrix(driv(fx)).obrat();
+			m = PLUMatrix(driv(fx));
 
-		nxt = fx - m * func(fx);
+		nxt = fx - m.solve(func(fx));
 	}
 
 	const int militime = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -245,19 +197,19 @@ std::tuple<MyVector, int, int, int> NewtonES4(MyVector(* func)(const MyVector& x
 	const std::chrono::time_point<std::chrono::steady_clock> start =
 		std::chrono::steady_clock::now();
 
-	Matrix m = PLUMatrix(driv(fx)).obrat();
+	PLUMatrix m = PLUMatrix(driv(fx));
 
-	MyVector nxt = fx - m * func(fx);
+	MyVector nxt = fx - m.solve(func(fx));
 
-	while ((fx - nxt).getNorm() > eps)
+	while ((fx - nxt).getNorm() + func(nxt).getNorm() > eps)
 	{
 		++steps;
 
 		if((steps-1)%k == 0)
-			m = PLUMatrix(driv(fx)).obrat();
+			m = PLUMatrix(driv(fx));
 
 		fx = nxt;
-		nxt = fx - m * func(fx);
+		nxt = fx - m.solve(func(fx));
 	}
 
 	const int militime = std::chrono::duration_cast<std::chrono::milliseconds>(
@@ -269,6 +221,49 @@ std::tuple<MyVector, int, int, int> NewtonES4(MyVector(* func)(const MyVector& x
 
 	if(show)
 		std::cout << "Newton in " << steps << " steps\n";
+
+	return std::make_tuple(nxt, militime, oper, calc);
+}
+
+std::tuple<MyVector, int, int, int> NewtonESh(MyVector(* func)(const MyVector& x),
+	Matrix(* driv)(const MyVector& x), MyVector fx, double eps, bool show)
+{
+	int steps = 1, steps2 = 1;
+
+	const std::chrono::time_point<std::chrono::steady_clock> start =
+		std::chrono::steady_clock::now();
+
+	PLUMatrix m = PLUMatrix(driv(fx));
+
+	MyVector nxt = fx - m.solve(func(fx));
+
+	int prev = (log((fx - nxt).getNorm())-log(eps))/log(10.);
+
+	while ((fx - nxt).getNorm() + func(nxt).getNorm() > eps)
+	{
+		++steps;
+
+		if((log((fx - nxt).getNorm()) - log(eps))/log(10.) + 2 < prev)
+		{
+			prev = log((log((fx - nxt).getNorm()) -log(eps))/log(10.));
+			m = PLUMatrix(driv(fx));
+
+			++steps2;
+		}
+
+		fx = nxt;
+		nxt = fx - m.solve(func(fx));
+	}
+
+	const int militime = std::chrono::duration_cast<std::chrono::milliseconds>(
+		std::chrono::steady_clock::now() - start).count();
+
+	const int oper = steps2 * operForJakobi + steps * operForNextVale;
+
+	const int calc = steps2 * calcForJakobi + steps * calcForNextVale;
+
+	if (show)
+		std::cout << "Newton in " << steps << " steps and " << steps2 << "\n";
 
 	return std::make_tuple(nxt, militime, oper, calc);
 }

@@ -17,12 +17,12 @@ class PLUMatrix
 	/**
 	 * \brief Columns permutation.
 	 */
-	std::vector<int> _p;
+	std::vector<size_t> _p;
 
 	/**
 	 * \brief Rows permutation.
 	 */
-	std::vector<int> _q;
+	std::vector<size_t> _q;
 
 public:
 	/**
@@ -47,27 +47,27 @@ public:
 	 * \brief	Calcualte rank of matrix.
 	 * \return	Rank of matrix.
 	 */
-	size_t getRank() const noexcept;
+	size_t getRank(double eps = 1e-6) const noexcept;
 
 	/**
 	 * \brief	Make obrat matrix.
 	 * \return	Obrat matrix.
 	 */
-	Matrix obrat() const noexcept;
+	Matrix obrat(double eps= 1e-6) const noexcept;
 
 	/**
 	 * \brief	Check if equation system has solution.
 	 * \param b Vector-column of free members.
 	 * \return	Answer for equation system.
  	 */
-	bool hasSolution(MyVector b) const noexcept;
+	bool hasSolution(MyVector b, double eps = 1e-6) const noexcept;
 
 	/**
 	 * \brief	Solve equation system.
 	 * \param b Vector-column of free members.
 	 * \return	Answer for equation system.
 	 */
-	MyVector solve(MyVector b) const noexcept;
+	MyVector solve(MyVector b, double eps = 1e-6) const noexcept;
 
 	/**
 	 * \brief	Return condition number of matrix.

@@ -2,8 +2,6 @@
 #include <cassert>
 #include <algorithm>
 
-const double eps = 1e-3;
-
 PLUMatrix::PLUMatrix(Matrix a):_a(std::move(a))
 {
 	assert(_a.numRows() != 0 || _a.numCols() != 0);
@@ -95,7 +93,7 @@ double PLUMatrix::getDeterminant() const noexcept
 	return ans;
 }
 
-size_t PLUMatrix::getRank() const noexcept
+size_t PLUMatrix::getRank(double eps) const noexcept
 {
 	size_t ans = 0;
 	while (ans < _a.numCols() && ans < _a.numRows() && abs(_a[ans][_p[ans]]) > eps)
@@ -104,7 +102,7 @@ size_t PLUMatrix::getRank() const noexcept
 }
 
 
-Matrix PLUMatrix::obrat() const noexcept
+Matrix PLUMatrix::obrat(double eps) const noexcept
 {
 	assert(_a.numRows() == _a.numCols());
 
@@ -112,13 +110,13 @@ Matrix PLUMatrix::obrat() const noexcept
 
 	std::vector<std::vector<double>> ans;
 	ans.reserve(_a.numCols());
-
+	
 	for(size_t i=0;i<_a.numCols();++i)
 	{
 		std::vector<double> res(_a.numRows());
 		res[i] = 1.;
 
-		res = solve(res).getData();
+		res = solve(res,eps).getData();
 
 		ans.emplace_back(res);
 	}
@@ -126,12 +124,12 @@ Matrix PLUMatrix::obrat() const noexcept
 	return Matrix(ans).trans();
 }
 
-bool PLUMatrix::hasSolution(MyVector b) const noexcept
+bool PLUMatrix::hasSolution(MyVector b, double eps) const noexcept
 {
 	for (size_t i = 0;i < _q.size();++i)
 		std::swap(b[i], b[_q[i]]);
 
-	const size_t num = getRank();
+	const size_t num = getRank(eps);
 
 	for(size_t i = num;i<_a.numRows();++i)
 	{
@@ -147,11 +145,11 @@ bool PLUMatrix::hasSolution(MyVector b) const noexcept
 	return true;
 }
 
-MyVector PLUMatrix::solve(MyVector b) const noexcept
+MyVector PLUMatrix::solve(MyVector b, double eps) const noexcept
 {
 	assert(_a.numRows() != 0u);
 
-	assert(hasSolution(b));
+	assert(hasSolution(b, eps));
 
 	const size_t num = getRank();
 

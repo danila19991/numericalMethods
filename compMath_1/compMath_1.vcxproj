@@ -117,6 +117,7 @@
   <ItemGroup>
     <ClCompile Include="BFS.cpp" />
     <ClCompile Include="Calculations.cpp" />
+    <ClCompile Include="Integrals.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MyTable.cpp" />
@@ -129,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="BFS.h" />
     <ClInclude Include="Calculations.h" />
+    <ClInclude Include="Integrals.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MyTable.h" />
     <ClInclude Include="MyVector.h" />

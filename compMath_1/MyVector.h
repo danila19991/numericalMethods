@@ -98,10 +98,18 @@ public:
 	friend MyVector operator / (const MyVector& vec, double k);
 
 	/**
+	 * \brief			Operator for normalising.
+	 * \param[in] k		Coefficient.
+	 * \param[in] vec	Vector for normalising.
+	 * \return			Result vector.
+	 */
+	friend MyVector operator * (double k,const MyVector& vec);
+
+	/**
 	 * \brief	Method for get inf-mesuare.
 	 * \return	Inf-mesuare.
 	 */
-	double getNorm() const;
+	double getNorm() const noexcept;
 
 	/**
 	 * \brief	Get size of vector.
@@ -114,13 +122,13 @@ public:
 	 * \param[in] eps	Acyracity.
 	 * \return			Answer.
 	 */
-	bool isZero(double eps) const;
+	bool isZero(double eps) const noexcept;
 
 	/**
 	 * \brief	Getter of storrage.
 	 * \return	Storrage of vector.
 	 */
-	std::vector<double> getData() const;
+	std::vector<double> getData() const noexcept;
 
 	/**
 	 * \brief				Getter for random vector.

@@ -2,10 +2,9 @@
 
 #include <cassert>
 #include <algorithm>
-#include <iostream>
 #include <iomanip>
 
-void printDelimetr(const std::vector<size_t>& lens, std::ostream& out) noexcept
+void printDelimetr(const std::vector<size_t>& lens, std::ostream& out) 
 {
 	out << '+';
 	for(auto &len:lens)
@@ -18,7 +17,7 @@ void printDelimetr(const std::vector<size_t>& lens, std::ostream& out) noexcept
 }
 
 template<typename T>
-void addLine(const std::vector<size_t>& lens,const std::vector<T>& data, std::ostream& out) noexcept
+void addLine(const std::vector<size_t>& lens,const std::vector<T>& data, std::ostream& out) 
 {
 	out << '|';
 	for(size_t i=0;i<lens.size();i++)
@@ -52,7 +51,7 @@ std::vector<size_t> getLens(const std::vector<std::vector<double>>& data, const 
 
 void outputInTableWithHeader(const std::vector<std::string>& header,
 							 const std::vector<std::vector<double>>& data, const size_t pres,
-							 std::ostream& out) noexcept
+							 std::ostream& out) 
 {
 	assert(!data.empty());
 	for(auto& it: data)
@@ -81,11 +80,11 @@ void outputInTableWithHeader(const std::vector<std::string>& header,
 }
 
 void outputTable(const std::vector<std::vector<double>>& data, const size_t pres, std::ostream& out)
-				 noexcept
+				 
 {
 	assert(!data.empty());
 
-	std::vector<size_t> lens = getLens(data, pres);
+	const std::vector<size_t> lens = getLens(data, pres);
 
 	out.precision(pres);
 	out << std::fixed;

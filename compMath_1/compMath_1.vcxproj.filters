@@ -48,6 +48,12 @@
     <ClCompile Include="Integrals.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DifferentialEquations.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Plot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Calculations.h">
@@ -78,6 +84,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Integrals.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DifferentialEquations.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Plot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

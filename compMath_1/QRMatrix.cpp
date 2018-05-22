@@ -71,12 +71,12 @@ QRMatrix::QRMatrix(Matrix m):_r(std::move(m))
 	}
 }
 
-Matrix QRMatrix::getA() const
+Matrix QRMatrix::getA() const noexcept
 {
 	return _q * _r;
 }
 
-MyVector QRMatrix::solve(MyVector b)
+MyVector QRMatrix::solve(MyVector b) const
 {
 	assert(b.size() == _q.numRows());
 
@@ -97,7 +97,7 @@ MyVector QRMatrix::solve(MyVector b)
 	return ans;
 }
 
-void QRMatrix::printQR(std::ostream& out) const
+void QRMatrix::printQR(std::ostream& out) const 
 {
 	out << "Q Matrix:\n" << _q << "\nR Matrix:\n" << _r << '\n';
 }

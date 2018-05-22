@@ -187,7 +187,7 @@ double PLUMatrix::getConditionNumber() const noexcept
 	return getA().getNorm()*obrat().getNorm();
 }
 
-void PLUMatrix::printPLU(std::ostream& out) const noexcept
+void PLUMatrix::printPLU(std::ostream& out) const
 {
 	for (auto& it : _p)
 		out << it << ' ';

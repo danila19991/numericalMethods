@@ -10,45 +10,8 @@ constexpr int operForNextVale = 220;
 constexpr int calcForJakobi = 1067;
 constexpr int calcForNextVale = 210;
 
-double Newton(double(* func)(double x), double(* driv)(double x), double l, double r, double eps)
-{
-	assert(func(l)*func(r) <= 0.);
-	
-	if (l > r)
-		std::swap(l, r);
-	
-	int steps = 0;
-
-	double prev = (r + l) / 2;
-	double nxt = nxt = prev - func(prev) / driv(prev);
-	while (abs(prev - nxt) >= eps)
-	{
-		if (func(l)*func(nxt) > 0.)
-			l = nxt;
-		else
-			r = nxt;
-		prev = nxt;
-
-		nxt = prev - func(prev) / driv(prev);
-
-		++steps;
-		if(steps > 100000)
-		{
-			std::cout << "Newton2 is not working";
-			return std::numeric_limits<double>::infinity();
-		}
-
-		if (nxt < l || nxt > r)
-			nxt = (l + r) / 2;
-	}
-
-	std::cout << "Newton2 work in " << steps << '\n';
-
-	return nxt;
-}
-
 double Newton(const std::function<double(double x)>& func,
-	const std::function<double(double x)>& driv, double l, double r, double eps)
+	const std::function<double(double x)>& driv, double l, double r, const double eps)
 {
 	assert(func(l)*func(r) <= 0.);
 
@@ -83,7 +46,8 @@ double Newton(const std::function<double(double x)>& func,
 	return nxt;
 }
 
-double AbsoluteLessRoot(double(*func)(double x), double(*driv)(double x), double eps)
+double AbsoluteLessRoot(const std::function<double(double x)>& func, 
+	const std::function<double(double x)>& driv, const double eps)
 {
 	double r = 1., l = -1.;
 
@@ -110,8 +74,10 @@ double AbsoluteLessRoot(double(*func)(double x), double(*driv)(double x), double
 	return (abs(ansl) < abs(ansr)) ? ansl : ansr;
 }
 
-std::tuple<MyVector, int, int, int> NewtonES1(MyVector(* func)(const MyVector& x), 
-	Matrix(* driv)(const MyVector& x), MyVector fx, const double eps, bool show)
+std::tuple<MyVector, int, int, int> NewtonES1(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv,
+	MyVector fx, const double eps, const bool show)
 {
 	int steps = 1;
 
@@ -141,8 +107,10 @@ std::tuple<MyVector, int, int, int> NewtonES1(MyVector(* func)(const MyVector& x
 	return std::make_tuple(nxt, militime, oper, calc);
 }
 
-std::tuple<MyVector, int, int, int> NewtonES2(MyVector(* func)(const MyVector& x),
-	Matrix(* driv)(const MyVector& x), MyVector fx, double eps, bool show)
+std::tuple<MyVector, int, int, int> NewtonES2(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv,
+	MyVector fx, const double eps, const bool show)
 {
 	int steps = 1;
 
@@ -178,8 +146,10 @@ std::tuple<MyVector, int, int, int> NewtonES2(MyVector(* func)(const MyVector& x
 	return std::make_tuple(nxt, militime, oper, calc);
 }
 
-std::tuple<MyVector, int, int, int> NewtonES3(MyVector(*func)(const MyVector& x),
-	Matrix(*driv)(const MyVector& x), MyVector fx, int k, double eps, bool show)
+std::tuple<MyVector, int, int, int> NewtonES3(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv,
+	MyVector fx, const int k, const double eps, const bool show)
 {
 	int steps = 1;
 
@@ -223,8 +193,10 @@ std::tuple<MyVector, int, int, int> NewtonES3(MyVector(*func)(const MyVector& x)
 	return std::make_tuple(nxt, militime, oper, calc);
 }
 
-std::tuple<MyVector, int, int, int> NewtonES4(MyVector(* func)(const MyVector& x),
-	Matrix(* driv)(const MyVector& x), MyVector fx, int k, double eps, bool show)
+std::tuple<MyVector, int, int, int> NewtonES4(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv,
+	MyVector fx, const int k, const double eps, const bool show)
 {
 	assert(k > 0);
 
@@ -261,8 +233,10 @@ std::tuple<MyVector, int, int, int> NewtonES4(MyVector(* func)(const MyVector& x
 	return std::make_tuple(nxt, militime, oper, calc);
 }
 
-std::tuple<MyVector, int, int, int> NewtonESh(MyVector(* func)(const MyVector& x),
-	Matrix(* driv)(const MyVector& x), MyVector fx, double eps, bool show)
+std::tuple<MyVector, int, int, int> NewtonESh(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv,
+	MyVector fx, const double eps, const bool show)
 {
 	int steps = 1, steps2 = 1;
 

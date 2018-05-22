@@ -13,8 +13,8 @@
  * \param[in] out	 Stream for outputting.
  */
 void outputInTableWithHeader(const std::vector<std::string>& header,
-							 const std::vector<std::vector<double>>& data, const size_t pres = 9,
-							 std::ostream& out = std::cout) noexcept;
+							 const std::vector<std::vector<double>>& data, size_t pres = 9,
+							 std::ostream& out = std::cout);
 
 /**
  * \brief			Function for outputting table with data.
@@ -22,7 +22,7 @@ void outputInTableWithHeader(const std::vector<std::string>& header,
  * \param[in] pres	Precision for outputting.
  * \param[in] out	Stream for outputting.
  */
-void outputTable(const std::vector<std::vector<double>>& data, const size_t pres = 9,
-				 std::ostream& out = std::cout) noexcept;
+void outputTable(const std::vector<std::vector<double>>& data, size_t pres = 9,
+				 std::ostream& out = std::cout);
 
 #endif // MY_TABLE

@@ -13,19 +13,19 @@ MyVector::MyVector(std::vector<double> data):_data(std::move(data))
 {
 }
 
-double& MyVector::operator[](size_t pos) noexcept
+double& MyVector::operator[](const size_t pos) noexcept
 {
 	assert(pos < _data.size());
 	return _data[pos];
 }
 
-const double& MyVector::operator[](size_t pos) const noexcept
+const double& MyVector::operator[](const size_t pos) const noexcept
 {
 	assert(pos < _data.size());
 	return _data[pos];
 }
 
-double MyVector::getNorm() const
+double MyVector::getNorm() const noexcept
 {
 	double ans = 0.;
 
@@ -45,7 +45,7 @@ size_t MyVector::size() const noexcept
 	return _data.size();
 }
 
-bool MyVector::isZero(double eps) const
+bool MyVector::isZero(const double eps) const noexcept
 {
 	assert(eps >= 0.);
 
@@ -58,7 +58,7 @@ bool MyVector::isZero(double eps) const
 	return true;
 }
 
-std::vector<double> MyVector::getData() const
+std::vector<double> MyVector::getData() const noexcept
 {
 	return _data;
 }
@@ -150,6 +150,16 @@ MyVector operator/(const MyVector& vec, double k)
 
 	for (size_t i = 0;i < ans.size();++i)
 		ans[i] /= k;
+
+	return ans;
+}
+
+MyVector operator*(double k, const MyVector& vec)
+{
+	MyVector ans = vec;
+
+	for (size_t i = 0;i < ans.size();++i)
+		ans[i] *= k;
 
 	return ans;
 }

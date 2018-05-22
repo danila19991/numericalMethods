@@ -56,16 +56,18 @@ public:
 	Matrix obrat(double eps= 1e-6) const noexcept;
 
 	/**
-	 * \brief	Check if equation system has solution.
-	 * \param b Vector-column of free members.
-	 * \return	Answer for equation system.
+	 * \brief			Check if equation system has solution.
+	 * \param[in] b		Vector-column of free members.
+	 * \param[in] eps	Error for calculating.
+	 * \return			Answer for equation system.
  	 */
 	bool hasSolution(MyVector b, double eps = 1e-6) const noexcept;
 
 	/**
-	 * \brief	Solve equation system.
-	 * \param b Vector-column of free members.
-	 * \return	Answer for equation system.
+	 * \brief			Solve equation system.
+	 * \param[in] b		Vector-column of free members.
+	 * \param[in] eps	Error for calculations.
+	 * \return			Answer for equation system.
 	 */
 	MyVector solve(MyVector b, double eps = 1e-6) const noexcept;
 
@@ -79,7 +81,7 @@ public:
 	 * \brief			Print all local fields in stream.
 	 * \param[in] out	Stream for outputting.
 	 */
-	void printPLU(std::ostream& out) const noexcept;
+	void printPLU(std::ostream& out) const;
 
 	/**
 	* \brief				Get random square posistive difinite matrix.
@@ -106,8 +108,5 @@ public:
 	*/
 	friend std::istream& operator >> (std::istream& in, PLUMatrix& m);
 };
-
-//todo
-//optimise swapping of columns and rows.
 
 #endif // PLU_MATRIX

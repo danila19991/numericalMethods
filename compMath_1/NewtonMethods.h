@@ -4,17 +4,6 @@
 #include <functional>
 
 /**
- * \brief			Newton method realisation 2.
- * \param[in] func	Function.
- * \param[in] driv	Derivative.
- * \param[in] l		First side of segment.
- * \param[in] r		Second side of segment.
- * \param[in] eps	Error for solution.
- * \return			Root from this segment.
- */
-double Newton(double(*func)(double x), double(*driv)(double x), double l, double r, double eps);
-
-/**
 * \brief			Newton method realisation 2.
 * \param[in] func	Function.
 * \param[in] driv	Derivative.
@@ -33,7 +22,8 @@ double Newton(const std::function<double(double x)>& func,
  * \param[in] eps	Error for solution.
  * \return			Minimal root by absolute value(not zero).
  */
-double AbsoluteLessRoot(double(*func)(double x), double(*driv)(double x), double eps);
+double AbsoluteLessRoot(const std::function<double(double x)>& func, 
+	const std::function<double(double x)>& driv, double eps);
 
 /**
  * \brief			First implimentation of Newton method.
@@ -44,8 +34,10 @@ double AbsoluteLessRoot(double(*func)(double x), double(*driv)(double x), double
  * \param[in] show	Flag if details should be shown.
  * \return			Answer with needed error.
  */
-std::tuple<MyVector,int,int,int> NewtonES1(MyVector(*func)(const MyVector& x), 
-	Matrix(*driv)(const MyVector& x), MyVector fx, double eps, bool show = true);
+std::tuple<MyVector,int,int,int> NewtonES1(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv,
+	MyVector fx, double eps, bool show = true);
 
 /**
  * \brief			First implimentation of Newton method.
@@ -56,8 +48,10 @@ std::tuple<MyVector,int,int,int> NewtonES1(MyVector(*func)(const MyVector& x),
  * \param[in] show	Flag if details should be shown.
  * \return			Answer with needed error.
  */
-std::tuple<MyVector, int, int, int> NewtonES2(MyVector(*func)(const MyVector& x), 
-	Matrix(*driv)(const MyVector& x), MyVector fx, double eps, bool show = true);
+std::tuple<MyVector, int, int, int> NewtonES2(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv, 
+	MyVector fx, double eps, bool show = true);
 
 /**
  * \brief			First implimentation of Newton method.
@@ -69,8 +63,10 @@ std::tuple<MyVector, int, int, int> NewtonES2(MyVector(*func)(const MyVector& x)
  * \param[in] show	Flag if details should be shown.
  * \return			Answer with needed error.
  */
-std::tuple<MyVector, int, int, int> NewtonES3(MyVector(*func)(const MyVector& x),
-	Matrix(*driv)(const MyVector& x), MyVector fx, int k, double eps, bool show = true);
+std::tuple<MyVector, int, int, int> NewtonES3(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv,
+	MyVector fx, int k, double eps, bool show = true);
 
 /**
 * \brief			First implimentation of Newton method.
@@ -82,8 +78,10 @@ std::tuple<MyVector, int, int, int> NewtonES3(MyVector(*func)(const MyVector& x)
 * \param[in] show	Flag if details should be shown.
 * \return			Answer with needed error.
 */
-std::tuple<MyVector, int, int, int> NewtonES4(MyVector(*func)(const MyVector& x),
-	Matrix(*driv)(const MyVector& x), MyVector fx, int k, double eps, bool show = true);
+std::tuple<MyVector, int, int, int> NewtonES4(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv,
+	MyVector fx, int k, double eps, bool show = true);
 
 
 /**
@@ -95,7 +93,9 @@ std::tuple<MyVector, int, int, int> NewtonES4(MyVector(*func)(const MyVector& x)
  * \param[in] show	Flag if details should be shown.
  * \return			Answer with needed error.
  */
-std::tuple<MyVector, int, int, int> NewtonESh(MyVector(*func)(const MyVector& x),
-	Matrix(*driv)(const MyVector& x), MyVector fx, double eps, bool show = true);
+std::tuple<MyVector, int, int, int> NewtonESh(
+	const std::function<MyVector(const MyVector& x)>& func,
+	const std::function<Matrix(const MyVector& x)>& driv,
+	MyVector fx, double eps, bool show = true);
 
 #endif

@@ -3,9 +3,9 @@
 #include<algorithm>
 #include <cassert>
 
-const double pi = acos(-1.);
+const double PI = acos(-1.);
 
-double mysqrt(double x, double eps) noexcept
+double mysqrt(const double x, const double eps) noexcept
 {
 	assert(x >= 0.);
 	double ansPrev = std::max(x, 1.);
@@ -18,10 +18,10 @@ double mysqrt(double x, double eps) noexcept
 	return ans;
 }
 
-double mysin(double x, double eps) noexcept 
+double mysin(double x, const double eps) noexcept 
 {
-	const int k = static_cast<int>(x / (pi / 2));
-	x -= k * (pi/2);
+	const auto k = static_cast<int>(x / (PI / 2));
+	x -= k * (PI/2);
 	if (k%4 == 1) 
 	{
 		return mycos(x, eps);
@@ -50,10 +50,10 @@ double mysin(double x, double eps) noexcept
 	return ans;
 }
 
-double mycos(double x, double eps) noexcept
+double mycos(double x, const double eps) noexcept
 {
-	const int k = static_cast<int>(x / (pi / 2));
-	x -= k * (pi / 2);
+	const auto k = static_cast<int>(x / (PI / 2));
+	x -= k * (PI / 2);
 	if (k % 4 == 1)
 	{
 		return mysin(x, eps);
@@ -82,7 +82,7 @@ double mycos(double x, double eps) noexcept
 	return ans;
 }
 
-double myatan(double x, double eps) noexcept 
+double myatan(const double x, const double eps) noexcept 
 {
 	double ans,a;
 	if(x > 1. - eps || x < -1. + eps)
@@ -90,11 +90,11 @@ double myatan(double x, double eps) noexcept
 		a = 1 / x;
 		if (x > 1. - eps)
 		{
-			ans = pi / 2 - a;
+			ans = PI / 2 - a;
 		}
 		else
 		{
-			ans = -pi / 2 - a;
+			ans = -PI / 2 - a;
 		}
 		for (int i = 1;abs(a / (2 * i - 1)) >= eps;i++)
 		{
@@ -128,7 +128,7 @@ double myatan(double x, double eps) noexcept
 	return ans;
 }
 
-double myexp(double x, double eps) noexcept
+double myexp(const double x, const double eps) noexcept
 {
 	if(x < 0)
 	{

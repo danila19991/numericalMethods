@@ -117,12 +117,14 @@
   <ItemGroup>
     <ClCompile Include="BFS.cpp" />
     <ClCompile Include="Calculations.cpp" />
+    <ClCompile Include="DifferentialEquations.cpp" />
     <ClCompile Include="Integrals.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="MyTable.cpp" />
     <ClCompile Include="MyVector.cpp" />
     <ClCompile Include="NewtonMethods.cpp" />
+    <ClCompile Include="Plot.cpp" />
     <ClCompile Include="PLUMatrix.cpp" />
     <ClCompile Include="QRMatrix.cpp" />
     <ClCompile Include="IterationES.cpp" />
@@ -130,11 +132,13 @@
   <ItemGroup>
     <ClInclude Include="BFS.h" />
     <ClInclude Include="Calculations.h" />
+    <ClInclude Include="DifferentialEquations.h" />
     <ClInclude Include="Integrals.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="MyTable.h" />
     <ClInclude Include="MyVector.h" />
     <ClInclude Include="NewtonMethods.h" />
+    <ClInclude Include="Plot.h" />
     <ClInclude Include="PLUMatrix.h" />
     <ClInclude Include="QRMatrix.h" />
     <ClInclude Include="IterationES.h" />

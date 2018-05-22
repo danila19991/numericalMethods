@@ -35,14 +35,14 @@ public:
 	 * \brief	Getter for primal matrix.
 	 * \return	primal matrix.
 	 */
-	Matrix getA() const;
+	Matrix getA() const noexcept;
 
 	/**
 	 * \brief		Method for getting answer of equation system.
 	 * \param[in] b Vector-column of free members.
 	 * \return		Answer for equation system.
 	 */
-	MyVector solve(MyVector b);
+	MyVector solve(MyVector b) const;
 
 	/**
 	 * \brief			Printer for Q and R matrix.

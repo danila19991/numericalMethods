@@ -4,7 +4,7 @@
 #include "NewtonMethods.h"
 #include "QRMatrix.h"
 
-double RectanglesMethod(double(* func)(double x), double l,double r, double len)
+double RectanglesMethod(const std::function<double(double x)>& func, double l,double r, double len)
 {
 	assert(len > 0.);
 
@@ -117,8 +117,8 @@ MyVector makeM(const double l, const double r, const double b, const double k, c
  * \param[in] k		Parametr of weight functron.
  * \return 
  */
-double IQAIntagralLoc(double(*func)(double x), const double l, const double r, const double b,
-	const double k)
+double IQAIntagralLoc(const std::function<double(double x)>& func, const double l, const double r,
+	const double b, const double k)
 {
 	assert(k != 1);
 	assert(l < r);
@@ -150,8 +150,8 @@ double IQAIntagralLoc(double(*func)(double x), const double l, const double r, c
 	return a ^ fx;
 }
 
-std::pair<double, double> IQAIntagral(double (* func)(double x), const double l, const double r,
-                                      const double b, const double k, const double maxDer)
+std::pair<double, double> IQAIntagral(const std::function<double(double x)>& func, const double l,
+	const double r, const double b, const double k, const double maxDer)
 {
 	assert(k != 1);
 	assert(l < r);
@@ -170,8 +170,8 @@ std::pair<double, double> IQAIntagral(double (* func)(double x), const double l,
 	return std::make_pair(IQAIntagralLoc(func,l,r,b,k), (abs((m2 + m) ^ c) + abs(m2^c))*maxDer / 6);
 }
 
-double IntagralNewtonKotsPartial(double (* func)(double x), double l, double r, const double b,
-                              const double k, double len)
+double IntagralNewtonKotsPartial(const std::function<double(double x)>& func, double l, double r,
+	const double b, const double k, double len)
 {
 	assert(len > 0.);
 
@@ -198,8 +198,8 @@ double IntagralNewtonKotsPartial(double (* func)(double x), double l, double r, 
 	return ans;
 }
 
-double IntagralNewtonKotsAcurate(double(* func)(double x), double l, double r, double b, double k,
-											 double eps)
+double IntagralNewtonKotsAcurate(const std::function<double(double x)>& func, const double l,
+	const double r, const double b, const double k, const double eps)
 {
 	const double ans = IntagralNewtonKotsPartial(func, l, r, b, k, 0.1);
 
@@ -219,8 +219,8 @@ double IntagralNewtonKotsAcurate(double(* func)(double x), double l, double r, d
  * \param[in] k		Parametr of weight function.
  * \return 
  */
-std::pair<double, MyVector> GausIntagralLoc(double (*func)(double x), const double l, 
-	const double r, const double b, const double k)
+std::pair<double, MyVector> GausIntagralLoc(const std::function<double(double x)>& func,
+	const double l, const double r, const double b, const double k)
 {
 	MyVector m = makeM(l, r, b, k, 6);
 
@@ -273,7 +273,8 @@ std::pair<double, MyVector> GausIntagralLoc(double (*func)(double x), const doub
 
 	const double x1 = -p - sqrt(des), x2 = -p + sqrt(des);
 
-	const MyVector a= MyVector({ Newton(f,d,l,x1,1e-6),Newton(f,d,x1,x2,1e-6) ,Newton(f,d,x2,r,1e-6) });
+	const MyVector a= MyVector({ Newton(f,d,l,x1,1e-6),Newton(f,d,x1,x2,1e-6) ,
+		Newton(f,d,x2,r,1e-6) });
 
 
 	Matrix A(3);
@@ -297,8 +298,8 @@ std::pair<double, MyVector> GausIntagralLoc(double (*func)(double x), const doub
 	return std::make_pair(static_cast<QRMatrix>(A).solve(m1) ^ fx,a);
 }
 
-std::pair<double, double> GausIntagral(double(* func)(double x), const double l, const double r, 
-	const double b, const double k, const double maxDer)
+std::pair<double, double> GausIntagral(const std::function<double(double x)>& func, const double l,
+	const double r, const double b, const double k, const double maxDer)
 {
 	assert(k != 1);
 	assert(l < r);
@@ -324,8 +325,8 @@ std::pair<double, double> GausIntagral(double(* func)(double x), const double l,
 	return std::make_pair(a.first, (abs(m^c))*maxDer / 720.);
 }
 
-double GausIntagralPartial(double(*func)(double x), double l, double r, const double b, 
-	const double k, double len)
+double GausIntagralPartial(const std::function<double(double x)>& func, double l, double r,
+	const double b, const double k, double len)
 {
 	assert(len > 0.);
 
@@ -352,8 +353,8 @@ double GausIntagralPartial(double(*func)(double x), double l, double r, const do
 	return ans;
 }
 
-double GausIntagralAcurate(double(* func)(double x), const double l, const double r, const double b, 
-	const double k, const double eps)
+double GausIntagralAcurate(const std::function<double(double x)>& func, const double l,
+	const double r, const double b, const double k, const double eps)
 {
 	const double ans = GausIntagralPartial(func, l, r, b, k, 3);
 
